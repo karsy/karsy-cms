@@ -16,16 +16,7 @@ class Home extends React.Component {
     super(props);
     this.state = {
     };
-    this.handleClick = this.handleClick.bind(this);
     this.toggle = this.toggle.bind(this);
-  }
-
-  handleClick(e) {
-    const { history } = this.props;
-    console.log('click ', e);
-    if (e.key === this.props.currentKey) return;
-    this.props.changeCurrentKey(e.key);
-    history.push(`/home/${e.key}`);
   }
 
   toggle() {
@@ -35,6 +26,7 @@ class Home extends React.Component {
   }
 
   render() {
+    const { match } = this.props;
     return (
       <div className="home">
         <Layout className="layout">
@@ -45,7 +37,7 @@ class Home extends React.Component {
             width={256}
           >
             <div className="logo" />
-            <SiderMenu />
+            <SiderMenu menuData={menuData} />
           </Sider>
           <Layout>
             <Header>
@@ -56,7 +48,12 @@ class Home extends React.Component {
               />
             </Header>
             <Content>
-              <Editor />
+              <Route exact path={`${match.url}`} component={Editor} />
+              <Route path={`${match.url}/blog`} component={Editor} />
+              <Route path={`${match.url}/openSource`} render={() => <h3>Please select a openSource.</h3>} />
+              <Route path={`${match.url}/tool`} render={() => <h3>Please select a tool.</h3>} />
+              <Route path={`${match.url}/message`} render={() => <h3>Please select a message.</h3>} />
+              <Route path={`${match.url}/about`} render={() => <h3>Please select a about.</h3>} />
             </Content>
             <Footer>我们是共产主义接班人</Footer>
           </Layout>

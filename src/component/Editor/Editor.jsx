@@ -21,7 +21,9 @@ class Editor extends React.Component {
   }
 
   componentDidMount() {
-    this.myMditor = window.Mditor.fromTextarea(document.getElementById('editor'));
+    if (!this.myMditor) {
+      this.myMditor = window.Mditor.fromTextarea(document.getElementById('editor'));
+    }
 
     console.log(this.myMditor.value);
   }
