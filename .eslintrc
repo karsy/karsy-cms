@@ -1,0 +1,25 @@
+{
+  "extends": "eslint-config-ais/react",
+  "plugins": [ "react" ],
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "quote-props": ["error", "consistent-as-needed"],
+    "react/forbid-prop-types": [1, { "forbid": ["any"] }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "lines-around-directive": ["error", { "before": "never", "after": "always" }],
+    "react/jsx-no-bind": 0,
+    "react/sort-comp": 0,
+    "react/no-render-return-value": 0,
+    "react/no-string-refs": 0,
+    "no-prototype-builtins": 0,
+    "no-global-assign": 0,
+    "no-unsafe-negation": 0,
+    "no-param-reassign": 0,
+    "no-shadow": 0,
+    "semi": ["error", "always"]
+  }
+}

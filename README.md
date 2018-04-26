@@ -1,2 +1,2 @@
-# karsy-cms
-karsy后台管理系统
+# blog
+博客后台管理系统
