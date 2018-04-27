@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 const devMode = process.env.NODE_ENV !== 'production';
@@ -67,9 +68,9 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: [
-          path.resolve(__dirname, 'node_modules')
-        ],
+        // exclude: [
+        //   path.resolve(__dirname, 'node_modules')
+        // ],
         use: [
           devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
           'style-loader',
@@ -93,15 +94,19 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|woff|woff2|ttf|otf|eot)$/,
-        exclude: [
-          path.resolve(__dirname, 'node_modules')
-        ],
+        // exclude: [
+        //   path.resolve(__dirname, 'node_modules')
+        // ],
         loader: 'url-loader?limit=8192'
       }
     ]
   },
 
   plugins: [
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, 'src', 'lib'),
+      to: path.resolve(__dirname, 'dist')
+    }]),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',

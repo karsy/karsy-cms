@@ -13,8 +13,8 @@ export const menuData = [
         path: 'new',
       },
       {
-        name: '工作台',
-        path: 'workplace',
+        name: '分类管理',
+        path: 'category',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
