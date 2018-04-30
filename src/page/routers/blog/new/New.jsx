@@ -13,7 +13,7 @@ const Option = Select.Option;
 const { TextArea } = Input;
 
 const children = [];
-for (let i = 10; i < 36; i++) {
+for (let i = 10; i < 36; i += 1) {
   children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
 }
 
