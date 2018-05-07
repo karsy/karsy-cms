@@ -5,8 +5,9 @@ import { Layout, Icon } from 'antd';
 import { changeCurrentKey } from '../../redux/action';
 import { menuData } from './const';
 import SiderMenu from '../../component/SiderMenu';
-import Editor from '../../component/Editor';
 import New from '../../page/routers/blog/new';
+import List from '../../page/routers/blog/list';
+import Sort from '../../page/routers/blog/sort';
 
 import './Home.less';
 
@@ -50,11 +51,10 @@ class Home extends React.Component {
             </Header>
             <Content>
               <Route exact path={`${match.url}`} component={New} />
-              <Route path={`${match.url}/blog`} component={New} />
-              <Route path={`${match.url}/openSource`} render={() => <h3>Please select a openSource.</h3>} />
-              <Route path={`${match.url}/tool`} render={() => <h3>Please select a tool.</h3>} />
-              <Route path={`${match.url}/message`} render={() => <h3>Please select a message.</h3>} />
-              <Route path={`${match.url}/about`} render={() => <h3>Please select a about.</h3>} />
+              {/* <Route path={`${match.url}/blog`} component={New} /> */}
+              <Route path={`${match.url}/blog/new`} component={New} />
+              <Route path={`${match.url}/blog/list`} component={List} />
+              <Route path={`${match.url}/blog/sort`} component={Sort} />
             </Content>
             <Footer>我们是共产主义接班人</Footer>
           </Layout>
