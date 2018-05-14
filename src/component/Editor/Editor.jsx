@@ -1,6 +1,5 @@
 import React from 'react';
 import mditor from 'mditor';
-import { Input } from 'antd';
 import classnames from 'classnames';
 
 // import 'mditor/dist/js/mditor';
@@ -9,7 +8,6 @@ import classnames from 'classnames';
 import './Editor.less';
 
 const parser = new mditor.Parser();
-const { TextArea } = Input;
 
 console.log(parser.parse('** Hello mditor! **'));
 

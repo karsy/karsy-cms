@@ -30,7 +30,7 @@ module.exports = {
       '/api': 'http://localhost:3009'
     },
     host: '127.0.0.1', // 主机地址
-    port: 3000, // 端口号
+    port: 3002, // 端口号
     contentBase: path.join(__dirname, 'dist'), // boolean | string | array, static file location
     compress: true, // enable gzip compression
     // color: true,
