@@ -24,6 +24,7 @@ class New extends React.Component {
 
     };
     this.checkMdValue = this.checkMdValue.bind(this);
+    this.checkMaxLength = this.checkMaxLength.bind(this);
     this.submit = this.submit.bind(this);
   }
 
@@ -34,7 +35,15 @@ class New extends React.Component {
       return;
     }
     this.editor.changeErrorStatus(true);
-    callback('文章内容不能为空!');
+    callback('文章内容不能为空！');
+  }
+
+  checkMaxLength = (maxLength, rule, value, callback) => {
+    if (value.trim().length <= maxLength) {
+      callback();
+      return;
+    }
+    callback(`最大长度为${maxLength}！`);
   }
 
   submit() {
@@ -77,7 +86,7 @@ class New extends React.Component {
             label="标题"
           >
             {getFieldDecorator('title', {
-              rules: [{ required: true, message: '标题不能为空！' }],
+              rules: [{ required: true, message: '标题不能为空！' }, { validator: this.checkMaxLength.bind(this, 20) }],
             })(<Input placeholder="请输入文章标题" />)}
           </FormItem>
           <FormItem
@@ -97,7 +106,7 @@ class New extends React.Component {
             label="摘要"
           >
             {getFieldDecorator('digest', {
-              rules: [{ required: true, message: '摘要不能为空！' }],
+              rules: [{ required: true, message: '摘要不能为空！' }, { validator: this.checkMaxLength.bind(this, 200) }],
             })(<TextArea placeholder="请输入文章摘要" autosize={{ minRows: 2, maxRows: 6 }} />)}
           </FormItem>
           <FormItem

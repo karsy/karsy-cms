@@ -41,21 +41,91 @@ const home = (state = defaultState.home, { type, payload }) => {
   }
 };
 
-const blog = (state = defaultState.blog, { type, payload }) => {
+const list = (state = defaultState.blog.list, { type, payload }) => {
   switch (type) {
-    case 'HAHA333':
+    case 'CHANGE_SORT_KEY':
     {
       const value = payload;
-      alert(value);
       return {
         ...state,
-        a: value
+        currentType: value
+      };
+    }
+    case 'GET_SORTLIST':
+    {
+      const value = payload;
+      return {
+        ...state,
+        sortList: value
+      };
+    }
+    case 'GET_ARTICLE_LIST':
+    {
+      const value = payload;
+      return {
+        ...state,
+        total: value.total,
+        articleData: value.articleData,
+        isSpin: false
+      };
+    }
+    case 'CHANGE_PAGEPARAMS':
+    {
+      const value = payload;
+      return {
+        ...state,
+        pageParams: value
+      };
+    }
+    case 'CHANGE_QUERYDATA':
+    {
+      const value = payload;
+      return {
+        ...state,
+        queryData: value
+      };
+    }
+    case 'SWITCH_SPIN':
+    {
+      const value = payload;
+      return {
+        ...state,
+        isSpin: value
       };
     }
     default:
       return state;
   }
 };
+
+// article路由配置
+const article = (state = defaultState.blog.article, { type, payload }) => {
+  switch (type) {
+    case 'GET_ARTICLE_DETAIL':
+    {
+      const value = payload;
+      return {
+        ...state,
+        articleDetail: value
+      };
+    }
+    case 'SWITCH_SPIN':
+    {
+      const value = payload;
+      return {
+        ...state,
+        isSpin: value
+      };
+    }
+    default:
+      return state;
+  }
+};
+
+const blog = combineReducers({
+  list,
+  article
+});
 
 const reducer = combineReducers({
   global,

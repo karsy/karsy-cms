@@ -8,6 +8,7 @@ import SiderMenu from '../../component/SiderMenu';
 import New from '../../page/routers/blog/new';
 import List from '../../page/routers/blog/list';
 import Sort from '../../page/routers/blog/sort';
+import Article from '../../page/routers/blog/article';
 
 import './Home.less';
 
@@ -55,6 +56,7 @@ class Home extends React.Component {
               <Route path={`${match.url}/blog/new`} component={New} />
               <Route path={`${match.url}/blog/list`} component={List} />
               <Route path={`${match.url}/blog/sort`} component={Sort} />
+              <Route path={`${match.url}/blog/article/:id`} component={Article} />
             </Content>
             <Footer>我们是共产主义接班人</Footer>
           </Layout>
