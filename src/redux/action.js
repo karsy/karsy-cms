@@ -149,6 +149,26 @@ export const changeQueryData = value => (dispatch) => {
   });
 };
 
+export const deleteArticle = ({ id, success, fail }) => {
+  axios.get('http://localhost:3001/blog/deleteArticle', {
+    params: {
+      id
+    }
+  })
+    .then((response) => {
+      const data = response.data.content;
+      if (data.isSuccess) {
+        success();
+      } else {
+        fail();
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      fail();
+    });
+};
+
 /**  文章详情页  **/
 export const getArticleById = id => (dispatch) => {
   axios.get('http://localhost:3001/blog/getArticleById', {

@@ -51,10 +51,9 @@ class Home extends React.Component {
               />
             </Header>
             <Content>
-              <Route exact path={`${match.url}`} component={New} />
-              {/* <Route path={`${match.url}/blog`} component={New} /> */}
-              <Route path={`${match.url}/blog/new`} component={New} />
+              <Route exact path={`${match.url}`} component={List} />
               <Route path={`${match.url}/blog/list`} component={List} />
+              <Route path={`${match.url}/blog/new`} component={New} />
               <Route path={`${match.url}/blog/sort`} component={Sort} />
               <Route path={`${match.url}/blog/article/:id`} component={Article} />
             </Content>

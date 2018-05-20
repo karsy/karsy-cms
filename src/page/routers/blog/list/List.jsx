@@ -4,14 +4,15 @@ import { Menu, Avatar, Icon, Input, Select, Pagination, Spin } from 'antd';
 import dayjs from 'dayjs';
 import EmptyData from '../../../../component/EmptyData';
 import NoComponent from '../../../../component/NoComponent';
-import TagSelect from '../../../../component/TagSelect';
+import Dialog from '../../../../component/Dialog';
 import {
   changeSort,
   getSortList,
   getArticleList,
   switchSpin,
   changePageParams,
-  changeQueryData
+  changeQueryData,
+  deleteArticle
 } from '../../../../redux/action';
 import { queryOpitons } from './const';
 
@@ -31,6 +32,7 @@ class List extends React.Component {
     this.handleArticleClick = this.handleArticleClick.bind(this);
     this.onSwitchPage = this.onSwitchPage.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +61,36 @@ class List extends React.Component {
     getArticleList({ ...pageParams, currentPage: 1 }, { ...queryData, key: value });
     changePageParams({ ...pageParams, currentPage: 1 });
     changeQueryData({ ...queryData, key: value });
+  }
+
+  onDelete(id) {
+    const { deleteArticle } = this.props;
+    Dialog.confirm({
+      title: '确定删除该文章吗？',
+      content: '删除之后将不可恢复',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        deleteArticle({
+          id,
+          success: () => {
+            Dialog.success({
+              title: '温馨提示',
+              content: '操作成功'
+            }, () => {
+              location.reload();
+            });
+          },
+          fail: () => {
+            Dialog.error({
+              title: '温馨提示',
+              content: '操作失败'
+            });
+          }
+        });
+      }
+    });
   }
 
   renderMenu() {
@@ -117,6 +149,7 @@ class List extends React.Component {
           <p className="article-op">
             <span onClick={this.handleArticleClick.bind(this, item.id)}>预览</span>
             <span>编辑</span>
+            <span onClick={this.onDelete.bind(this, item.id)}>删除</span>
           </p>
         </li>
       );
@@ -171,7 +204,8 @@ const mapDispatchToProps = dispatch => ({
   getArticleList: (pageParams, queryData) => dispatch(getArticleList(pageParams, queryData)),
   changePageParams: value => dispatch(changePageParams(value)),
   changeQueryData: value => dispatch(changeQueryData(value)),
-  switchSpin: value => dispatch(switchSpin(value))
+  switchSpin: value => dispatch(switchSpin(value)),
+  deleteArticle: id => deleteArticle(id)
 });
 
 const mapStateToProps = ({ global, blog }) => ({
