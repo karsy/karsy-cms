@@ -1,10 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button, Select } from 'antd';
-import axios from 'axios';
+import {
+  getArticleById,
+  emptyCacheData,
+  insertArticle,
+  updateArticle
+} from '../../../../redux/action';
 import Editor from '../../../../component/Editor';
 import Dialog from '../../../../component/Dialog';
-import { insertArticleURL } from './const';
 
 import './New.less';
 
@@ -28,6 +32,19 @@ class New extends React.Component {
     this.submit = this.submit.bind(this);
   }
 
+  componentDidMount() {
+    const { match, getArticleById, emptyCacheData } = this.props;
+    if (match.params.id) {
+      getArticleById(match.params.id);
+    } else {
+      emptyCacheData();
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.form.resetFields();
+  }
+
   checkMdValue(rule, value, callback) {
     if (value && value.trim() !== '') {
       this.editor.changeErrorStatus(false);
@@ -47,17 +64,13 @@ class New extends React.Component {
   }
 
   submit() {
-    this.props.form.validateFields((err, value) => {
+    const { form, match } = this.props;
+    form.validateFields((err, value) => {
       if (err) {
         return;
       }
-      axios.post(insertArticleURL, {
-        title: value.title,
-        sort: value.sort,
-        digest: value.digest,
-        content: value.content
-      }).then((response) => {
-        if (response.data.content.isSuccess) {
+      const callback = {
+        success: () => {
           Dialog.success({
             title: '温馨提示',
             content: '操作成功！',
@@ -65,19 +78,24 @@ class New extends React.Component {
               location.reload();
             }
           });
-        } else {
+        },
+        error: () => {
           Dialog.error({
             title: '温馨提示',
             content: '操作失败！',
           });
         }
-      }).catch((error) => {
-        console.log(error);
-      });
+      };
+      if (match.params.id) {
+        updateArticle(value, match.params.id)(callback);
+      } else {
+        insertArticle(value)(callback);
+      }
     });
   }
 
   render() {
+    const { articleDetail } = this.props;
     const { getFieldDecorator } = this.props.form;
     return (
       <div className="blog-new">
@@ -86,6 +104,7 @@ class New extends React.Component {
             label="标题"
           >
             {getFieldDecorator('title', {
+              initialValue: articleDetail.title || '',
               rules: [{ required: true, message: '标题不能为空！' }, { validator: this.checkMaxLength.bind(this, 20) }],
             })(<Input placeholder="请输入文章标题" />)}
           </FormItem>
@@ -93,11 +112,13 @@ class New extends React.Component {
             label="分类"
           >
             {getFieldDecorator('sort', {
-              initialValue: 'a1',
+              // initialValue: articleDetail.sort || null,
+              ...(articleDetail.sort ? { initialValue: articleDetail.sort } : {}),
               rules: [{ required: true, message: '分类不能为空！' }],
             })(<Select
               size="default"
               style={{ width: 200 }}
+              placeholder="请选择分类"
             >
               {children}
             </Select>)}
@@ -106,6 +127,7 @@ class New extends React.Component {
             label="摘要"
           >
             {getFieldDecorator('digest', {
+              initialValue: articleDetail.digest || '',
               rules: [{ required: true, message: '摘要不能为空！' }, { validator: this.checkMaxLength.bind(this, 200) }],
             })(<TextArea placeholder="请输入文章摘要" autosize={{ minRows: 2, maxRows: 6 }} />)}
           </FormItem>
@@ -113,7 +135,7 @@ class New extends React.Component {
             label="文章内容"
           >
             {getFieldDecorator('content', {
-              // initialValue: 'fewjojfew',
+              initialValue: articleDetail.content || '',
               rules: [{ validator: this.checkMdValue }],
             })(<Editor ref={(resp) => { this.editor = resp; }} />)}
           </FormItem>
@@ -128,11 +150,13 @@ class New extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   // changeCurrentKey: value => dispatch(changeCurrentKey(value))
+  getArticleById: id => dispatch(getArticleById(id)),
+  emptyCacheData: () => dispatch(emptyCacheData())
 });
 
-const mapStateToProps = ({ home, global }) => ({
-  ...home,
-  ...global
+const mapStateToProps = ({ blog, global }) => ({
+  ...global,
+  ...blog.new
 });
 
 const WrappedNew = Form.create()(New);

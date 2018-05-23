@@ -70,21 +70,35 @@ class Article extends React.Component {
     getArticleById(match.params.id);
   }
 
+  renderToc = (lexerData) => {
+    const tocData = convertLexerToTree(lexerData);
+    const getChildToc = (data) => {
+      return data.map((item) => {
+        return (
+          <Link key={`${item.depth}-${item.text}`} href={`#${item.text}`} title={item.text}>
+            {getChildToc(item.child || [])}
+          </Link>
+        );
+      });
+    };
+    return (
+      <div className="toc-box">
+        <Anchor>
+          <div className="toc">
+            <span className="toc-title">文章目录</span>
+            { getChildToc(tocData) }
+          </div>
+        </Anchor>
+      </div>
+    );
+  }
+
   render() {
     const { isSpin, articleDetail } = this.props;
     // console.log(JSON.stringify(this.props.articleDetail));
     const mdHtml = marked(this.props.articleDetail.content || '');
     const lexerData = marked.lexer(this.props.articleDetail.content || '').filter(item => item.type === 'heading');
     const isShowToc = lexerData.length >= 1;
-    // console.log(lexerData);
-    // const tocX = toc(this.props.articleDetail.content || '');
-    // console.log(tocRender(this.props.articleDetail.content || ''));
-    // console.log(tocX);
-    const tocComponent = lexerData.map((item) => {
-      return (
-        <Link key={`${item.depth}-${item.text}`} href={`#${item.text}`} title={item.text} />
-      );
-    });
     return (
       <Spin size="large" spinning={isSpin}>
         <div className="article">
@@ -103,16 +117,7 @@ class Article extends React.Component {
                 <div className="markdown-body" dangerouslySetInnerHTML={{ __html: mdHtml }} />
               </div>
             </div>
-            { isShowToc ? (
-              <div className="toc-box">
-                <Anchor>
-                  <div className="toc">
-                    <span className="toc-title">文章目录</span>
-                    {tocComponent}
-                  </div>
-                </Anchor>
-              </div>
-            ) : null }
+            { isShowToc ? this.renderToc(lexerData) : null }
           </NoComponent>
         </div>
       </Spin>

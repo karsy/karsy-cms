@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { Route, Switch, HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import React, { Component } from 'react';
+import { LocaleProvider } from 'antd';
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 import store from './redux/store';
 import Home from './page/home';
 
@@ -27,4 +29,8 @@ class App extends Component {
 }
 
 
-ReactDOM.render(<App />, document.getElementById('App'));
+ReactDOM.render((
+  <LocaleProvider locale={zhCN}>
+    <App />
+  </LocaleProvider>
+), document.getElementById('App'));

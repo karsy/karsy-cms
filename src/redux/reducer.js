@@ -19,13 +19,12 @@ const global = (state = defaultState.global, { type, payload }) => { // 全局�
 
 const home = (state = defaultState.home, { type, payload }) => {
   switch (type) {
-    case 'HAHA222':
+    case 'GET_MENULIST':
     {
       const value = payload;
-      alert(value);
       return {
         ...state,
-        a: value
+        menuData: value
       };
     }
     case 'CHANGE_KEY':
@@ -122,9 +121,34 @@ const article = (state = defaultState.blog.article, { type, payload }) => {
   }
 };
 
+// new路由配置
+const newx = (state = defaultState.blog.new, { type, payload }) => {
+  switch (type) {
+    case 'GET_ARTICLE_DETAIL':
+    {
+      const value = payload;
+      return {
+        ...state,
+        articleDetail: value
+      };
+    }
+    case 'SWITCH_SPIN':
+    {
+      const value = payload;
+      return {
+        ...state,
+        isSpin: value
+      };
+    }
+    default:
+      return state;
+  }
+};
+
 const blog = combineReducers({
   list,
-  article
+  article,
+  new: newx
 });
 
 const reducer = combineReducers({

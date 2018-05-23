@@ -43,7 +43,6 @@ export const alertHaha333 = value => (dispatch) => {
 };
 
 export const changeSort = key => (dispatch) => {
-  alert(`当前的分类是：${key}`);
   dispatch({
     type: 'CHANGE_SORT_KEY',
     payload: key
@@ -188,3 +187,66 @@ export const getArticleById = id => (dispatch) => {
       console.error(err);
     });
 };
+
+export const getMenuList = () => (dispatch) => {
+  axios.get('http://localhost:3001/queryMenu')
+    .then((response) => {
+      const data = response.data.content.retValue;
+
+      const getMenuListById = (data, parentId) => {
+        const menu = [];
+        data.forEach((item) => {
+          if (item.parent === parentId) {
+            // data.splice(index, 1);
+            item.children = getMenuListById(data, item.id);
+            menu.push(item);
+          }
+        });
+        return menu;
+      };
+      dispatch({
+        type: 'GET_MENULIST',
+        payload: getMenuListById(data, 0)
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+export const emptyCacheData = () => (dispatch) => {
+  dispatch({
+    type: 'GET_ARTICLE_DETAIL',
+    payload: {}
+  });
+};
+
+export const insertArticle = value => (cb) => {
+  axios.post('http://localhost:3001/blog/insertArticle', {
+    ...value
+  }).then((response) => {
+    if (response.data.content.isSuccess) {
+      cb.success();
+    } else {
+      cb.error();
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+};
+
+export const updateArticle = (value, id) => (cb) => {
+  axios.post('http://localhost:3001/blog/updateArticle', {
+    ...value,
+    id
+  }).then((response) => {
+    if (response.data.content.isSuccess) {
+      cb.success();
+    } else {
+      cb.error();
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+};
+

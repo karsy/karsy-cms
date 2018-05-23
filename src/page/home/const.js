@@ -14,7 +14,7 @@ export const menuData = [
       },
       {
         name: '分类管理',
-        path: 'category',
+        path: 'sort',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },

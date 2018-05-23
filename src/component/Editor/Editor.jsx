@@ -1,15 +1,10 @@
 import React from 'react';
-import mditor from 'mditor';
 import classnames from 'classnames';
 
 // import 'mditor/dist/js/mditor';
 // import 'mditor/dist/css/mditor.css';
 
 import './Editor.less';
-
-const parser = new mditor.Parser();
-
-console.log(parser.parse('** Hello mditor! **'));
 
 class Editor extends React.Component {
   constructor(props) {
@@ -19,6 +14,7 @@ class Editor extends React.Component {
       errorStatus: false
     };
     this.myMditor = null;
+    this.triggerChange = this.triggerChange.bind(this);
   }
 
   getData() {
@@ -33,23 +29,16 @@ class Editor extends React.Component {
     if ('value' in nextProps) {
       const value = nextProps.value;
       this.setState({ value });
+      this.myMditor && (this.myMditor.value = value);
+      // this.triggerChange(value);
     }
   }
 
   componentDidMount() {
-    // if (!this.myMditor) {
-    //   this.myMditor = window.Mditor.fromTextarea(document.getElementById('editor'));
-    // }
-    const myMditor = window.Mditor.fromTextarea(document.getElementById('editor'));
-
-    myMditor.on('ready', () => {
+    this.myMditor = window.Mditor.fromTextarea(document.getElementById('editor'));
+    this.myMditor.on('changed', () => {
+      this.triggerChange(this.myMditor.value);
     });
-    myMditor.on('changed', () => {
-      // this.setState({ errorStatus: myMditor.value.trim() === '' });
-      this.triggerChange(myMditor.value);
-    });
-
-    // console.log(this.myMditor.value);
   }
 
   triggerChange(value) {
@@ -66,6 +55,11 @@ class Editor extends React.Component {
           id="editor"
           defaultValue={this.state.value}
           placeholder="请输入文章内容"
+          // onChange={(value) => {
+          //   this.setState({ value }, () => {
+          //     this.triggerChange(value);
+          //   });
+          // }}
         />
       </div>
     );

@@ -4,9 +4,8 @@ export default {
     b: {}
   },
   home: {
-    a: '',
+    menuData: [],
     currentKey: 'blog',
-    b: {}
   },
   blog: {
     a: '',
@@ -29,6 +28,10 @@ export default {
     },
     // 文章路由state
     article: {
+      articleDetail: {},
+      isSpin: true
+    },
+    new: {
       articleDetail: {},
       isSpin: true
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Menu, Avatar, Icon, Input, Select, Pagination, Spin } from 'antd';
+import { Icon, Input, Select, Pagination, Spin } from 'antd';
 import dayjs from 'dayjs';
 import EmptyData from '../../../../component/EmptyData';
 import NoComponent from '../../../../component/NoComponent';
@@ -32,6 +32,7 @@ class List extends React.Component {
     this.handleArticleClick = this.handleArticleClick.bind(this);
     this.onSwitchPage = this.onSwitchPage.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.onModify = this.onModify.bind(this);
     this.onDelete = this.onDelete.bind(this);
   }
 
@@ -42,7 +43,9 @@ class List extends React.Component {
   }
 
   handleClick(value) {
-    this.props.changeSort(value);
+    const { changeSort, getArticleList, pageParams, queryData } = this.props;
+    changeSort(value);
+    getArticleList(pageParams, { ...queryData, sort: value });
   }
 
   handleArticleClick(id) {
@@ -63,23 +66,28 @@ class List extends React.Component {
     changeQueryData({ ...queryData, key: value });
   }
 
+  onModify = (id) => {
+    console.log(id);
+    const { history } = this.props;
+    history.push(`/home/blog/new/${id}`);
+  }
+
   onDelete(id) {
     const { deleteArticle } = this.props;
     Dialog.confirm({
       title: '确定删除该文章吗？',
       content: '删除之后将不可恢复',
-      okText: '确定',
       okType: 'danger',
-      cancelText: '取消',
       onOk() {
         deleteArticle({
           id,
           success: () => {
             Dialog.success({
               title: '温馨提示',
-              content: '操作成功'
-            }, () => {
-              location.reload();
+              content: '操作成功',
+              onOk: () => {
+                location.reload();
+              }
             });
           },
           fail: () => {
@@ -148,7 +156,7 @@ class List extends React.Component {
           <p className="article-digest">{item.digest}</p>
           <p className="article-op">
             <span onClick={this.handleArticleClick.bind(this, item.id)}>预览</span>
-            <span>编辑</span>
+            <span onClick={this.onModify.bind(this, item.id)}>编辑</span>
             <span onClick={this.onDelete.bind(this, item.id)}>删除</span>
           </p>
         </li>

@@ -10,7 +10,13 @@ export default class SiderMenu extends React.Component {
     super(props);
     this.state = {
     };
+    this.handleClick = this.handleClick.bind(this);
   }
+
+  handleClick(e) {
+    this.props.onClick(e.key, e.keyPath.reverse().join('/'));
+  }
+
   getMenuItems(menuData = this.props.menuData) {
     return menuData.map((item) => {
       if (item.children && item.children.length > 0) {
@@ -28,13 +34,15 @@ export default class SiderMenu extends React.Component {
       return <Menu.Item key={item.path}>{item.name}</Menu.Item>;
     });
   }
+
   render() {
     return (
       <Menu
-        defaultSelectedKeys={['5']}
-        defaultOpenKeys={['sub1']}
+        defaultSelectedKeys={['list']}
+        defaultOpenKeys={['blog']}
         mode="inline"
         theme="dark"
+        onClick={this.handleClick}
       >
         {this.getMenuItems()}
       </Menu>

@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { Layout, Icon } from 'antd';
-import { changeCurrentKey } from '../../redux/action';
-import { menuData } from './const';
+import { changeCurrentKey, getMenuList } from '../../redux/action';
 import SiderMenu from '../../component/SiderMenu';
 import New from '../../page/routers/blog/new';
 import List from '../../page/routers/blog/list';
@@ -20,6 +19,11 @@ class Home extends React.Component {
     this.state = {
     };
     this.toggle = this.toggle.bind(this);
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.getMenuList();
   }
 
   toggle() {
@@ -28,8 +32,14 @@ class Home extends React.Component {
     });
   }
 
+  handleMenuClick(key, path) {
+    const { history, location } = this.props;
+    if (location.pathname === `/home/${path}`) return;
+    history.push(`/home/${path}`);
+  }
+
   render() {
-    const { match } = this.props;
+    const { match, menuData } = this.props;
     return (
       <div className="home">
         <Layout className="layout">
@@ -40,7 +50,7 @@ class Home extends React.Component {
             width={256}
           >
             <div className="logo" />
-            <SiderMenu menuData={menuData} />
+            <SiderMenu menuData={menuData} onClick={this.handleMenuClick} />
           </Sider>
           <Layout>
             <Header>
@@ -53,7 +63,7 @@ class Home extends React.Component {
             <Content>
               <Route exact path={`${match.url}`} component={List} />
               <Route path={`${match.url}/blog/list`} component={List} />
-              <Route path={`${match.url}/blog/new`} component={New} />
+              <Route path={`${match.url}/blog/new/:id?`} component={New} />
               <Route path={`${match.url}/blog/sort`} component={Sort} />
               <Route path={`${match.url}/blog/article/:id`} component={Article} />
             </Content>
@@ -66,7 +76,8 @@ class Home extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  changeCurrentKey: value => dispatch(changeCurrentKey(value))
+  changeCurrentKey: value => dispatch(changeCurrentKey(value)),
+  getMenuList: () => dispatch(getMenuList())
 });
 
 const mapStateToProps = ({ home, global }) => ({
